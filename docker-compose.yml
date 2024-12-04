@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres-talatrivia
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 970c6abd629696989e5dd3e90bcf3a79
+      POSTGRES_DB: talatrivia
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./create-schema.sql:/docker-entrypoint-initdb.d/create-schema.sql
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: talatrivia
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=admin
+      - DB_PASSWORD=970c6abd629696989e5dd3e90bcf3a79
+      - DB_DATABASE=talatrivia
+    ports:
+      - "3005:3005"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
