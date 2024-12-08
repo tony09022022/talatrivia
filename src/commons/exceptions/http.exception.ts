@@ -5,6 +5,7 @@ import {
     ArgumentsHost,
     HttpException,
     ExceptionFilter,
+    UnauthorizedException,
   } from '@nestjs/common';
   
   import ConflictError from '../errors/conflict.error';
@@ -12,6 +13,7 @@ import {
   import RepositoryError from '../errors/repository.error';
   import FilterNotFound from '../errors/filter-not-found.error';
 import ResourceExistsError from '../errors/resource-exists.error';
+import UnauthorizedCredentialsError from '../errors/unauthorized-credentials.error';
   
   @Catch()
   export class HttpErrorException implements ExceptionFilter {
@@ -38,6 +40,10 @@ import ResourceExistsError from '../errors/resource-exists.error';
             instance: ResourceExistsError,
             statusCode: HttpStatus.CONFLICT,
         },
+        {
+            instance: UnauthorizedCredentialsError,
+            statusCode: HttpStatus.UNAUTHORIZED
+        }
       ];
     }
   
